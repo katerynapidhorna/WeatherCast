@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <SearchWeather msg="Welcome to Your Vue.js App" />
+    <SearchWeather />
   </div>
 </template>
 
