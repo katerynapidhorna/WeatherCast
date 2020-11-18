@@ -5,7 +5,7 @@
         <span
           >{{ weatherData[0].datetime }} - {{ weatherData[6].datetime }}</span
         >
-        <strong>{{ Math.floor(weatherData[0].temp) }}</strong>
+        <strong>{{ getAverage }}</strong>
       </div>
     </div>
     <div class="weather-data-container">
@@ -36,6 +36,22 @@ export default {
         }
         return el;
       });
+    },
+    getAverage() {
+      //filter first 10 elements
+      const arrOfTemps = this.weatherData.filter((el, i) => {
+        if (i > 9) {
+          return;
+        }
+        return el;
+      });
+      //get sum of temperatures
+      const total = arrOfTemps.reduce((tempAcc, elem) => {
+        return tempAcc + parseInt(elem.temp);
+      }, 0);
+      //culculate average number
+      //rounding number
+      return Math.floor(total / arrOfTemps.length);
     },
   },
   methods: {
