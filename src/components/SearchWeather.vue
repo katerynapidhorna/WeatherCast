@@ -1,27 +1,29 @@
 <template>
-  <div class="search-container">
-    <form v-on:submit="getWeather">
-      <img class="weather-img" src="../img/weather-img.png" alt="" />
-      <select
-        class="country-code"
-        id="country-code"
-        v-model="countries.selected"
-        v-if="countries.data"
-      >
-        <option v-for="el in countries.data" :key="el.code" :value="el.code">
-          {{ el.emoji }}
-          {{ el.code }}
-        </option>
-      </select>
-      <button class="submit-btn"></button>
-      <input
-        class="text-input"
-        type="text"
-        placeholder="Please enter your location..."
-        @input="onChange($event)"
-      />
-    </form>
-    <DisplayWeather :weatherData="weather.data" />
+  <div class="wrapper" :style="{ backgroundImage: createBackgroundGradient() }">
+    <div class="search-container">
+      <form v-on:submit="getWeather">
+        <img class="weather-img" src="../img/weather-img.png" alt="" />
+        <select
+          class="country-code"
+          id="country-code"
+          v-model="countries.selected"
+          v-if="countries.data"
+        >
+          <option v-for="el in countries.data" :key="el.code" :value="el.code">
+            {{ el.emoji }}
+            {{ el.code }}
+          </option>
+        </select>
+        <button class="submit-btn"></button>
+        <input
+          class="text-input"
+          type="text"
+          placeholder="Please enter your location..."
+          @input="onChange($event)"
+        />
+      </form>
+      <DisplayWeather :weatherData="weather.data" />
+    </div>
   </div>
 </template>
 
@@ -44,6 +46,7 @@ export default {
         data: null,
         inCity: "Amsterdam",
       },
+      averageTemp: null,
     };
   },
   methods: {
@@ -64,6 +67,36 @@ export default {
     //text's input event
     onChange(event) {
       this.weather.inCity = event.target.value;
+    },
+    //work with background gradient
+    createBackgroundGradient(val) {
+      let calculated = null;
+      const defaultGradient = `linear-gradient(
+      0deg,
+      rgba(255, 255, 255, 0.8),
+      rgba(255, 255, 255, 0.8)
+    ),
+    linear-gradient(
+      119.25deg,
+      #102f7e -11.47%,
+      #0c8dd6 3.95%,
+      #1aa0ec 19.37%,
+      #60c6ff 34.78%,
+      #9bdbff 50.19%,
+      #b4deda 65.61%,
+      #ffd66b 81.02%,
+      #ffc178 96.44%,
+      #fe9255 111.85%
+    )`;
+      if (val > -20 && val < 20) {
+        calculated = `linear-gradient(130.54deg, #9BDBFF -33.02%, #B4DEDA 52.01%, #FFD66B 137.04%)`;
+      } else if ((val > -40 && val < -20) || val === -20 || val === -40) {
+        console.log(val);
+        calculated = `linear-gradient(130.54deg, #102F7E -33.02%, #0C8DD6 52.01%, #1AA0EC 137.04%)`;
+      } else if ((val > 20 && val < 40) || val === 20 || val === 40) {
+        calculated = `linear-gradient(130.54deg, #FFD66B -33.02%, #FFC178 52.01%, #FE9255 137.04%)`;
+      }
+      return val ? calculated : defaultGradient;
     },
   },
   mounted() {
@@ -96,6 +129,14 @@ li {
 }
 a {
   color: #42b983;
+}
+
+.wrapper {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
 }
 
 .search-container {
