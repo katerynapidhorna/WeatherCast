@@ -1,27 +1,25 @@
 <template>
   <div class="search-container">
-    <form>
+    <form v-on:submit="getWeather">
       <img class="weather-img" src="../img/weather-img.png" alt="" />
       <select
         class="country-code"
         id="country-code"
         v-model="countries.selected"
         v-if="countries.data"
-        @change="addInCountryValue"
       >
         <option v-for="el in countries.data" :key="el.code" :value="el.code">
           {{ el.emoji }}
           {{ el.code }}
         </option>
       </select>
-      <div class="img-container"></div>
+      <button class="submit-btn"></button>
       <input
         class="text-input"
         type="text"
         placeholder="Please enter your location..."
         @input="onChange($event)"
       />
-      {{ getWeather() }}
     </form>
   </div>
 </template>
@@ -39,16 +37,16 @@ export default {
       },
       weather: {
         data: null,
-        inCountry: null,
-        inCity: null,
+        inCity: "Amsterdam",
       },
     };
   },
   methods: {
-    getWeather() {
+    getWeather(event) {
+      event.preventDefault();
       axios
         .get(
-          `https://api.weatherbit.io/v2.0/forecast/daily?city=Amsterdam,${this.countries.selected}&key=1730bfc17d6b4fd7bbaf707b4972dc8d`
+          `https://api.weatherbit.io/v2.0/forecast/daily?city=${this.weather.inCity},${this.countries.selected}&key=1730bfc17d6b4fd7bbaf707b4972dc8d`
         )
         .then((response) => {
           this.weather.data = response.data;
@@ -61,11 +59,6 @@ export default {
     //text's input event
     onChange(event) {
       this.weather.inCity = event.target.value;
-      console.log(this.weather.inCity);
-    },
-    addInCountryValue() {
-      this.weather.inCountry = this.countries.selected;
-      console.log(this.weather.inCountry);
     },
   },
   mounted() {
@@ -75,7 +68,6 @@ export default {
       )
       .then((response) => {
         this.countries.data = response.data;
-        console.log(this.countries.data, "<==country data");
       })
       .catch((e) => {
         this.errors.push(e);
@@ -127,16 +119,19 @@ form {
   padding-top: 2px;
 }
 
-.img-container {
+.submit-btn {
   position: absolute;
   right: 36px;
   top: 28px;
   height: 27px;
   width: 21px;
   background-image: url("../img/search-icon.png");
+  background-color: transparent;
   background-position-x: -20px;
   background-repeat: no-repeat;
   background-size: 41px;
+  border: none;
+  outline: none;
 }
 
 .country-code {
