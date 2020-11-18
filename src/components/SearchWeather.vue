@@ -21,14 +21,19 @@
         @input="onChange($event)"
       />
     </form>
+    <DisplayWeather :weatherData="weather.data" />
   </div>
 </template>
 
 <script>
 import axios from "axios";
+import DisplayWeather from "./DisplayWeather";
 
 export default {
   name: "SearchWeather",
+  components: {
+    DisplayWeather,
+  },
   data() {
     return {
       countries: {
@@ -49,7 +54,7 @@ export default {
           `https://api.weatherbit.io/v2.0/forecast/daily?city=${this.weather.inCity},${this.countries.selected}&key=1730bfc17d6b4fd7bbaf707b4972dc8d`
         )
         .then((response) => {
-          this.weather.data = response.data;
+          this.weather.data = response.data.data;
           console.log(this.weather.data, "<==weather data");
         })
         .catch((e) => {
