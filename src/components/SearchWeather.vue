@@ -5,10 +5,10 @@
       <select
         class="country-code"
         id="country-code"
-        v-model="selected"
-        v-if="data"
+        v-model="counties.selected"
+        v-if="counties.data"
       >
-        <option v-for="el in data" :key="el.code" :value="el.code">
+        <option v-for="el in counties.data" :key="el.code" :value="el.code">
           {{ el.emoji }}
           {{ el.code }}
         </option>
@@ -18,7 +18,9 @@
         class="text-input"
         type="text"
         placeholder="Please enter your location..."
+        @input="onChange($event)"
       />
+      {{ getWeather() }}
     </form>
   </div>
 </template>
@@ -30,9 +32,35 @@ export default {
   name: "SearchWeather",
   data() {
     return {
-      data: null,
-      selected: "NL",
+      counties: {
+        data: null,
+        selected: "NL",
+      },
+      weather: {
+        data: null,
+        inCountry: null,
+        inCity: null,
+      },
     };
+  },
+  methods: {
+    getWeather() {
+      axios
+        .get(
+          `https://api.weatherbit.io/v2.0/forecast/daily?city=Amsterdam,${this.counties.selected}&key=1730bfc17d6b4fd7bbaf707b4972dc8d`
+        )
+        .then((response) => {
+          this.weather.data = response.data;
+          console.log(this.weather.data, "<==weather data");
+        })
+        .catch((e) => {
+          this.errors.push(e);
+        });
+    },
+    onChange(event) {
+      this.weather.inCity = event.target.value;
+      console.log(this.weather.inCity);
+    },
   },
   mounted() {
     axios
@@ -40,8 +68,11 @@ export default {
         `https://unpkg.com/country-flag-emoji-json@1.0.2/json/flag-emojis-by-code.pretty.json`
       )
       .then((response) => {
-        this.data = response.data;
-        console.log(this.data, "<==data");
+        this.counties.data = response.data;
+        console.log(this.counties.data, "<==country data");
+      })
+      .catch((e) => {
+        this.errors.push(e);
       });
   },
 };
@@ -111,10 +142,6 @@ form {
   font-weight: 900;
 }
 
-option {
-  font-weight: 900;
-}
-
 .text-input {
   width: 425px;
   padding: 1em 20px;
@@ -129,9 +156,5 @@ option {
 
 .text-input:focus {
   border: 2px solid #b5c7ff;
-}
-
-.text-input:focus .img-container {
-  background-position-x: 0px;
 }
 </style>
