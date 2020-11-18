@@ -5,10 +5,11 @@
       <select
         class="country-code"
         id="country-code"
-        v-model="counties.selected"
-        v-if="counties.data"
+        v-model="countries.selected"
+        v-if="countries.data"
+        @change="addInCountryValue"
       >
-        <option v-for="el in counties.data" :key="el.code" :value="el.code">
+        <option v-for="el in countries.data" :key="el.code" :value="el.code">
           {{ el.emoji }}
           {{ el.code }}
         </option>
@@ -32,7 +33,7 @@ export default {
   name: "SearchWeather",
   data() {
     return {
-      counties: {
+      countries: {
         data: null,
         selected: "NL",
       },
@@ -47,7 +48,7 @@ export default {
     getWeather() {
       axios
         .get(
-          `https://api.weatherbit.io/v2.0/forecast/daily?city=Amsterdam,${this.counties.selected}&key=1730bfc17d6b4fd7bbaf707b4972dc8d`
+          `https://api.weatherbit.io/v2.0/forecast/daily?city=Amsterdam,${this.countries.selected}&key=1730bfc17d6b4fd7bbaf707b4972dc8d`
         )
         .then((response) => {
           this.weather.data = response.data;
@@ -57,9 +58,14 @@ export default {
           this.errors.push(e);
         });
     },
+    //text's input event
     onChange(event) {
       this.weather.inCity = event.target.value;
       console.log(this.weather.inCity);
+    },
+    addInCountryValue() {
+      this.weather.inCountry = this.countries.selected;
+      console.log(this.weather.inCountry);
     },
   },
   mounted() {
@@ -68,8 +74,8 @@ export default {
         `https://unpkg.com/country-flag-emoji-json@1.0.2/json/flag-emojis-by-code.pretty.json`
       )
       .then((response) => {
-        this.counties.data = response.data;
-        console.log(this.counties.data, "<==country data");
+        this.countries.data = response.data;
+        console.log(this.countries.data, "<==country data");
       })
       .catch((e) => {
         this.errors.push(e);
