@@ -77,33 +77,37 @@ export default {
     },
     //work with background gradient
     createBackgroundGradient(val) {
-      let calculated = null;
       const defaultGradient = `linear-gradient(
-      0deg,
-      rgba(255, 255, 255, 0.8),
-      rgba(255, 255, 255, 0.8)
-    ),
-    linear-gradient(
-      119.25deg,
-      #102f7e -11.47%,
-      #0c8dd6 3.95%,
-      #1aa0ec 19.37%,
-      #60c6ff 34.78%,
-      #9bdbff 50.19%,
-      #b4deda 65.61%,
-      #ffd66b 81.02%,
-      #ffc178 96.44%,
-      #fe9255 111.85%
-    )`;
-      if (val > -20 && val < 20) {
-        calculated = `linear-gradient(130.54deg, #9BDBFF -33.02%, #B4DEDA 52.01%, #FFD66B 137.04%)`;
-      } else if ((val > -40 && val < -20) || val === -20 || val === -40) {
-        console.log(val);
-        calculated = `linear-gradient(130.54deg, #102F7E -33.02%, #0C8DD6 52.01%, #1AA0EC 137.04%)`;
-      } else if ((val > 20 && val < 40) || val === 20 || val === 40) {
-        calculated = `linear-gradient(130.54deg, #FFD66B -33.02%, #FFC178 52.01%, #FE9255 137.04%)`;
+            0deg,
+            rgba(255, 255, 255, 0.8),
+            rgba(255, 255, 255, 0.8)
+          ),
+          linear-gradient(
+            119.25deg,
+            #102f7e -11.47%,
+            #0c8dd6 3.95%,
+            #1aa0ec 19.37%,
+            #60c6ff 34.78%,
+            #9bdbff 50.19%,
+            #b4deda 65.61%,
+            #ffd66b 81.02%,
+            #ffc178 96.44%,
+            #fe9255 111.85%
+          )`;
+      if (val) {
+        let calculated = null;
+        if (val > -20 && val < 20) {
+          calculated = `linear-gradient(130.54deg, #9BDBFF -33.02%, #B4DEDA 52.01%, #FFD66B 137.04%)`;
+        } else if ((val > -40 && val < -20) || val === -20 || val === -40) {
+          console.log(val);
+          calculated = `linear-gradient(130.54deg, #102F7E -33.02%, #0C8DD6 52.01%, #1AA0EC 137.04%)`;
+        } else if ((val > 20 && val < 40) || val === 20 || val === 40) {
+          calculated = `linear-gradient(130.54deg, #FFD66B -33.02%, #FFC178 52.01%, #FE9255 137.04%)`;
+        }
+        return calculated;
+      } else {
+        return defaultGradient;
       }
-      return val ? calculated : defaultGradient;
     },
   },
   mounted() {
