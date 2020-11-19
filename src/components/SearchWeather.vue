@@ -1,5 +1,10 @@
 <template>
-  <div class="wrapper" :style="{ backgroundImage: createBackgroundGradient() }">
+  <div
+    class="wrapper"
+    :style="{
+      backgroundImage: createBackgroundGradient($store.state.averageTemp),
+    }"
+  >
     <div class="search-container">
       <form v-on:submit="getWeather">
         <img class="weather-img" src="../img/weather-img.png" alt="" />
@@ -30,9 +35,11 @@
 <script>
 import axios from "axios";
 import DisplayWeather from "./DisplayWeather";
+import store from "../store";
 
 export default {
   name: "SearchWeather",
+  store,
   components: {
     DisplayWeather,
   },
