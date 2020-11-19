@@ -25,7 +25,8 @@
           placeholder="Please enter your location..."
           @input="onChange($event)"
         />
-        <button class="submit-btn"></button>
+        <button class="submit-btn" v-if="!isLoading"></button>
+        <button class="loading-icon" v-if="isLoading"></button>
       </form>
     </div>
     <DisplayWeather :weatherData="weather.data" />
@@ -45,6 +46,7 @@ export default {
   },
   data() {
     return {
+      isLoading: true,
       countries: {
         data: null,
         selected: "NL",
@@ -60,11 +62,13 @@ export default {
     //request the weather data
     getWeather(event) {
       event.preventDefault();
+      this.isLoading = true;
       axios
         .get(
           `https://api.weatherbit.io/v2.0/forecast/daily?city=${this.weather.inCity},${this.countries.selected}&key=1730bfc17d6b4fd7bbaf707b4972dc8d`
         )
         .then((response) => {
+          this.isLoading = false;
           this.weather.data = response.data.data;
         })
         .catch((e) => {
@@ -76,6 +80,7 @@ export default {
       this.weather.inCity = event.target.value;
     },
     //dinamic background gradient
+    //refuctor later!
     createBackgroundGradient(val) {
       const defaultGradient = `linear-gradient(
             0deg,
@@ -162,19 +167,50 @@ form {
   padding-top: 7px;
 }
 
-.submit-btn {
+.submit-btn,
+.loading-icon {
   position: absolute;
   right: 36px;
   top: 36px;
+  background-color: transparent;
+  background-repeat: no-repeat;
+  border: none;
+  outline: none;
+}
+
+.submit-btn {
   height: 27px;
   width: 21px;
   background-image: url("../img/search-icon.png");
-  background-color: transparent;
   background-position-x: -20px;
-  background-repeat: no-repeat;
   background-size: 41px;
-  border: none;
-  outline: none;
+}
+
+.loading-icon {
+  height: 21px;
+  width: 21px;
+  background-image: url("../img/loading-icon.png");
+  background-size: 21px;
+  background-position-x: 0px;
+  animation: rotation 2s linear infinite;
+}
+
+@-webkit-keyframes rotation {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .country-code {
