@@ -15,7 +15,7 @@
         :key="el.id"
       >
         <div>
-          <span>{{ convertDateTime(el.datetime) }}</span>
+          <span>{{ formatDateTime(el.datetime) }}</span>
           <strong>{{ Math.floor(el.temp) }}<sup>&#8451;</sup></strong>
         </div>
       </div>
@@ -55,17 +55,18 @@ export default {
         return tempAcc + parseInt(elem.temp);
       }, 0);
 
-      const result = Math.floor(total / arrOfTemps.length);
-      this.setAverageTemp(result);
       //culculate average number
       //rounding number
-      return Math.floor(total / arrOfTemps.length);
+      const result = Math.floor(total / arrOfTemps.length);
+      this.setAverageTemp(result);
+      return result;
     },
   },
   methods: {
-    convertDateTime(datetimeOne) {
+    formatDateTime(datetimeOne) {
       return moment(datetimeOne).format("dddd");
     },
+    //NOVEMBER 19 - 25 2020
     formatHeadline(datetimeOne, datetimeTwo) {
       const fromDate = moment(datetimeOne).format("MMMM D");
       const toDate = moment(datetimeTwo).format("D YYYY");
@@ -73,7 +74,6 @@ export default {
     },
     setAverageTemp(val) {
       this.$store.commit("setAverageTemp", val);
-      console.log(this.$store.state.averageTemp);
     },
   },
 };
