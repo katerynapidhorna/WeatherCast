@@ -57,6 +57,7 @@ export default {
     };
   },
   methods: {
+    //request the weather data
     getWeather(event) {
       event.preventDefault();
       axios
@@ -65,17 +66,16 @@ export default {
         )
         .then((response) => {
           this.weather.data = response.data.data;
-          console.log(this.weather.data, "<==weather data");
         })
         .catch((e) => {
           this.errors.push(e);
         });
     },
-    //text's input event
+    //text input event to save user input value reactively
     onChange(event) {
       this.weather.inCity = event.target.value;
     },
-    //work with background gradient
+    //dinamic background gradient
     createBackgroundGradient(val) {
       const defaultGradient = `linear-gradient(
             0deg,
@@ -99,7 +99,6 @@ export default {
         if (val > -20 && val < 20) {
           calculated = `linear-gradient(130.54deg, #9BDBFF -33.02%, #B4DEDA 52.01%, #FFD66B 137.04%)`;
         } else if ((val > -40 && val < -20) || val === -20 || val === -40) {
-          console.log(val);
           calculated = `linear-gradient(130.54deg, #102F7E -33.02%, #0C8DD6 52.01%, #1AA0EC 137.04%)`;
         } else if ((val > 20 && val < 40) || val === 20 || val === 40) {
           calculated = `linear-gradient(130.54deg, #FFD66B -33.02%, #FFC178 52.01%, #FE9255 137.04%)`;
@@ -111,6 +110,7 @@ export default {
     },
   },
   mounted() {
+    //request country codes
     axios
       .get(
         `https://unpkg.com/country-flag-emoji-json@1.0.2/json/flag-emojis-by-code.pretty.json`
@@ -127,21 +127,6 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
-
 .wrapper {
   position: absolute;
   top: 0;
