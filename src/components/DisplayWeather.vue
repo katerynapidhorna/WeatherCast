@@ -1,21 +1,23 @@
 <template>
   <div v-if="weatherData">
-    <div class="weather-data-container">
-      <div class="weather-data-today">
+    <div class="weather-data-container-first">
+      <div class="weather-data-average">
         <span>
           {{ formatHeadline(weatherData[0].datetime, weatherData[6].datetime) }}
         </span>
-        <strong>{{ getAverage }}</strong>
+        <strong>{{ getAverage }}<sup>&#8451;</sup></strong>
       </div>
     </div>
-    <div class="weather-data-container">
+    <div class="weather-data-container-second">
       <div
         class="weather-data-for-week"
         v-for="el in getWeatherForWeek"
         :key="el.id"
       >
-        <span>{{ convertDateTime(el.datetime) }}</span>
-        <strong>{{ Math.floor(el.temp) }}</strong>
+        <div>
+          <span>{{ convertDateTime(el.datetime) }}</span>
+          <strong>{{ Math.floor(el.temp) }}<sup>&#8451;</sup></strong>
+        </div>
       </div>
     </div>
   </div>
@@ -78,14 +80,26 @@ export default {
 </script>
 
 <style>
-.weather-data-container {
+.weather-data-container-first {
   display: flex;
   justify-content: space-around;
-  height: 120px;
-  margin-bottom: 48px;
+  align-items: center;
+  height: fit-content;
+  width: 632px;
+  margin: 0 auto;
+  margin-bottom: 31px;
 }
 
-.weather-data-today,
+.weather-data-container-second {
+  display: flex;
+  justify-content: space-between;
+  height: fit-content;
+  width: 632px;
+  margin: 0 auto;
+  margin-bottom: 31px;
+}
+
+.weather-data-average,
 .weather-data-for-week {
   color: #fff;
   font-weight: 600;
@@ -93,25 +107,56 @@ export default {
   text-shadow: 0px 0px 9px #08153e66;
 }
 
-.weather-data-today {
-  font-size: 120px;
+.weather-data-average {
+  font-size: 109px;
+  display: flex;
+  flex-direction: column;
 }
 
-.weather-data-today span,
+.weather-data-average span,
 .weather-data-for-week span {
   text-transform: uppercase;
   color: #08153e;
   opacity: 0.6;
   font-size: 12px;
+  letter-spacing: 0.06em;
   display: block;
+}
+
+.weather-data-average span {
+  margin-top: 48px;
+  line-height: 24px;
+}
+
+.weather-data-average strong,
+.weather-data-for-week strong {
+  position: relative;
+}
+
+.weather-data-average strong sup {
+  position: absolute;
+  font-size: 24px;
+  top: 27px;
+  right: -8px;
+}
+
+.weather-data-for-week strong {
+  margin-right: 18px;
+}
+
+.weather-data-for-week strong sup {
+  position: absolute;
+  top: 3px;
+  font-size: 14px;
 }
 
 .weather-data-for-week {
   font-size: 24px;
+  display: flex;
+  justify-content: space-between;
 }
 
-.weather-data-for-week strong::after,
-.weather-data-today strong::after {
+/* .weather-data-average strong::after {
   content: "\2103";
-}
+} */
 </style>

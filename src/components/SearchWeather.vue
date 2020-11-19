@@ -19,16 +19,16 @@
             {{ el.code }}
           </option>
         </select>
-        <button class="submit-btn"></button>
         <input
           class="text-input"
           type="text"
           placeholder="Please enter your location..."
           @input="onChange($event)"
         />
+        <button class="submit-btn"></button>
       </form>
-      <DisplayWeather :weatherData="weather.data" />
     </div>
+    <DisplayWeather :weatherData="weather.data" />
   </div>
 </template>
 
@@ -151,35 +151,36 @@ a {
 }
 
 .search-container {
-  width: fit-content;
+  width: 632px;
   margin: auto;
-  margin-top: 20%;
+  margin-top: 194px;
+  min-height: 92px;
 }
 
 form {
   position: relative;
   display: flex;
   justify-content: center;
-  width: fit-content;
+  width: 587px;
   color: #b2b6c3;
   background-color: #f8f8f8;
-  padding: 1em;
-  border-radius: 12px;
+  padding: 23px;
+  border-radius: 17px;
   box-shadow: 1px 3px 24px -13px #08153e;
 }
 
 .weather-img {
-  width: 49px;
+  width: 43px;
   padding-right: 15px;
-  height: 34px;
-  padding-left: 10px;
-  padding-top: 2px;
+  height: 29px;
+  padding-left: 3px;
+  padding-top: 7px;
 }
 
 .submit-btn {
   position: absolute;
   right: 36px;
-  top: 28px;
+  top: 36px;
   height: 27px;
   width: 21px;
   background-image: url("../img/search-icon.png");
@@ -196,16 +197,18 @@ form {
   margin-right: 5px;
   border-radius: 6px;
   border: 1px solid #b4b8c5;
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 900;
+  padding: 12px 11px;
 }
 
 .text-input {
   width: 425px;
-  padding: 1em 20px;
+  padding: 1em 12px;
   border-radius: 6px;
   border: 1px solid #b4b8c5;
   outline: none;
+  letter-spacing: 0.08em;
 }
 
 .text-input:hover {
@@ -214,5 +217,9 @@ form {
 
 .text-input:focus {
   border: 2px solid #b5c7ff;
+}
+
+.text-input:focus + .submit-btn {
+  background-position-x: 0;
 }
 </style>
