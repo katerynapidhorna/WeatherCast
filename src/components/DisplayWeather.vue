@@ -23,8 +23,11 @@
 
 <script>
 import moment from "moment";
+import store from "../store";
+
 export default {
   name: "DisplayWeather",
+  store,
   props: {
     weatherData: Array,
   },
@@ -49,6 +52,9 @@ export default {
       const total = arrOfTemps.reduce((tempAcc, elem) => {
         return tempAcc + parseInt(elem.temp);
       }, 0);
+
+      const result = Math.floor(total / arrOfTemps.length);
+      this.setAverageTemp(result);
       //culculate average number
       //rounding number
       return Math.floor(total / arrOfTemps.length);
@@ -57,6 +63,10 @@ export default {
   methods: {
     convertDateTime(datetime) {
       return moment(datetime).format("dddd");
+    },
+    setAverageTemp(val) {
+      this.$store.commit("setAverageTemp", val);
+      console.log(this.$store.state.averageTemp);
     },
   },
 };
