@@ -2,9 +2,9 @@
   <div v-if="weatherData">
     <div class="weather-data-container">
       <div class="weather-data-today">
-        <span
-          >{{ weatherData[0].datetime }} - {{ weatherData[6].datetime }}</span
-        >
+        <span>
+          {{ formatHeadline(weatherData[0].datetime, weatherData[6].datetime) }}
+        </span>
         <strong>{{ getAverage }}</strong>
       </div>
     </div>
@@ -61,8 +61,13 @@ export default {
     },
   },
   methods: {
-    convertDateTime(datetime) {
-      return moment(datetime).format("dddd");
+    convertDateTime(datetimeOne) {
+      return moment(datetimeOne).format("dddd");
+    },
+    formatHeadline(datetimeOne, datetimeTwo) {
+      const fromDate = moment(datetimeOne).format("MMMM D");
+      const toDate = moment(datetimeTwo).format("D YYYY");
+      return `${fromDate} - ${toDate}`;
     },
     setAverageTemp(val) {
       this.$store.commit("setAverageTemp", val);
