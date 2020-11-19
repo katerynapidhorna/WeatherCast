@@ -46,7 +46,7 @@ export default {
   },
   data() {
     return {
-      isLoading: true,
+      isLoading: false,
       countries: {
         data: null,
         selected: "NL",
