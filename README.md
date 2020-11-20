@@ -1,4 +1,5 @@
 # weather-cast
+[Deployed version] (https://5fb78d5140daa8bdade9a017--angry-dubinsky-a2c973.netlify.app/)
 
 ## Project setup
 
