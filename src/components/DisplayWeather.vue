@@ -36,23 +36,25 @@ export default {
   computed: {
     getWeatherForWeek() {
       return this.weatherData.filter((el, i) => {
-        if (i > 6) {
-          return;
-        }
-        return el;
+        return i > 6;
+        //   if (i > 6) {
+        //     return;
+        //   }
+        //   return el;
       });
     },
     getAverage() {
       //filter first 10 elements
       const arrOfTemps = this.weatherData.filter((el, i) => {
-        if (i > 9) {
-          return;
-        }
-        return el;
+        return i > 9;
+        // if (i > 9) {
+        //   return;
+        // }
+        // return el;
       });
       //get sum of temperatures
       const total = arrOfTemps.reduce((tempAcc, elem) => {
-        return tempAcc + parseInt(elem.temp);
+        return tempAcc + parseInt(elem.temp); // parseFloat
       }, 0);
 
       //culculate average number
