@@ -23,9 +23,14 @@
           class="text-input"
           type="text"
           placeholder="Please enter your location..."
+          ref="search"
           @input="onChange($event)"
         />
+        <span class="notification" v-if="isUndefinedMessage">{{
+          isUndefinedMessage
+        }}</span>
         <button class="submit-btn" v-if="!isLoading"></button>
+        <!-- https://ru.vuejs.org/v2/guide/class-and-style.html -->
         <button class="loading-icon" v-if="isLoading"></button>
       </form>
     </div>
@@ -37,6 +42,7 @@
 import axios from "axios";
 import DisplayWeather from "./DisplayWeather";
 import store from "../store";
+import { SELECTED_COUNTRY_CODE } from "../constants";
 
 export default {
   name: "SearchWeather",
@@ -47,33 +53,48 @@ export default {
   data() {
     return {
       isLoading: false,
+      errors: [],
       countries: {
         data: null,
-        selected: "NL",
+        selected: SELECTED_COUNTRY_CODE,
       },
       weather: {
         data: null,
         inCity: "Amsterdam",
+        isUndefinedMessage: null,
       },
       averageTemp: null,
     };
   },
   methods: {
+    //autofocus input
+    focusInput() {
+      const input = this.$refs.search;
+      console.log(input);
+      input.focus();
+    },
     //request the weather data
-    getWeather(event) {
+    async getWeather(event) {
       event.preventDefault();
       this.isLoading = true;
-      axios
-        .get(
+      try {
+        const response = await axios.get(
           `https://api.weatherbit.io/v2.0/forecast/daily?city=${this.weather.inCity},${this.countries.selected}&key=1730bfc17d6b4fd7bbaf707b4972dc8d`
-        )
-        .then((response) => {
-          this.isLoading = false;
-          this.weather.data = response.data.data;
-        })
-        .catch((e) => {
-          this.errors.push(e);
-        });
+        );
+        if (response.data.data === undefined) {
+          this.isUndefinedMessage =
+            "The city name may be incorrect, please try again";
+        } else {
+          this.isUndefinedMessage = null;
+        }
+        this.weather.data = response.data.data;
+        this.isLoading = false;
+      } catch (e) {
+        console.log(e);
+        this.errors.push(e);
+      } finally {
+        this.isLoading = false;
+      }
     },
     //text input event to save user input value reactively
     onChange(event) {
@@ -103,9 +124,9 @@ export default {
         let calculated = null;
         if (val > -20 && val < 20) {
           calculated = `linear-gradient(130.54deg, #9BDBFF -33.02%, #B4DEDA 52.01%, #FFD66B 137.04%)`;
-        } else if ((val > -40 && val < -20) || val === -20 || val === -40) {
+        } else if (val >= -40 && val <= -20) {
           calculated = `linear-gradient(130.54deg, #102F7E -33.02%, #0C8DD6 52.01%, #1AA0EC 137.04%)`;
-        } else if ((val > 20 && val < 40) || val === 20 || val === 40) {
+        } else if (val >= 20 && val <= 40) {
           calculated = `linear-gradient(130.54deg, #FFD66B -33.02%, #FFC178 52.01%, #FE9255 137.04%)`;
         }
         return calculated;
@@ -113,19 +134,21 @@ export default {
         return defaultGradient;
       }
     },
+    async getCountryCodes() {
+      try {
+        const response = await axios.get(
+          `https://unpkg.com/country-flag-emoji-json@1.0.2/json/flag-emojis-by-code.pretty.json`
+        );
+        this.countries.data = response.data;
+      } catch (e) {
+        console.log(e);
+        this.errors.push(e);
+      }
+    },
   },
   mounted() {
-    //request country codes
-    axios
-      .get(
-        `https://unpkg.com/country-flag-emoji-json@1.0.2/json/flag-emojis-by-code.pretty.json`
-      )
-      .then((response) => {
-        this.countries.data = response.data;
-      })
-      .catch((e) => {
-        this.errors.push(e);
-      });
+    this.focusInput();
+    this.getCountryCodes();
   },
 };
 </script>
@@ -242,5 +265,11 @@ form {
 
 .text-input:focus + .submit-btn {
   background-position-x: 0;
+}
+
+.notification {
+  position: absolute;
+  top: 110px;
+  color: red;
 }
 </style>
